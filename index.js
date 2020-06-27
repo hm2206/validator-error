@@ -1,7 +1,8 @@
-const ValidatorError = require('./src/ValidatorError');
-const 
+const ValidatorError = require('./src/ValidatorError'); 
+const RequestParse = require('./src/RequestParse');
 
 
 module.exports = {
-    ValidatorError
+    ValidatorError,
+    RequestParse
 }
