@@ -15,8 +15,7 @@ class ValidatorError extends Error {
             newMessages.push(e.message);
             obj[e.field || "undefined"] = newMessages || "undefined";
         })
-        this.message = "Los datos son incorrectos!";
-        this.data = JSON.stringify(obj);
+        this.message = JSON.stringify({ message: "Los datos son incorrectos!", errors: obj });
     }
 
 }
