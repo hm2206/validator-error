@@ -5,6 +5,9 @@ module.exports = (error = {}) => {
         let message = JSON.parse(error.message);
         return message;
     } catch (error) {
-        return error.message;
+        return {
+            errors: {},
+            message: error.message
+        };
     }
 };
