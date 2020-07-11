@@ -1,5 +1,5 @@
 
-# Error personalizado del Validator de Adonisjs 4.1*
+# Error personalizado del Validator de Adonisjs 4.1.* en el servidor
 
 
 
@@ -19,3 +19,6 @@
     throw ValidatorError(errores);
 
 ```
+
+
+# Error personalizado del Validator de Adonis para el cliente
