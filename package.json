@@ -1,6 +1,6 @@
 {
   "name": "validator-error-adonis",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Validador de error de adonis",
   "main": "index.js",
   "scripts": {
