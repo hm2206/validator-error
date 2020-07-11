@@ -16,9 +16,9 @@ const saveFile = async (request, name, config = { required: false }, Helpers, up
     }
     // response
     return {
-        realPath: Helpers.tmpPath(`${upload.path}/${upload.options.name}.${file.extname}`),
-        path: `${upload.path}/${upload.options.name}.${file.extname}`,
-        name: `${upload.options.name}.${file.extname}`,
+        realPath: Helpers.tmpPath(`${upload.path}/${upload.options.name}`),
+        path: `${upload.path}/${upload.options.name}`,
+        name: upload.options.name,
         extname: file.extname,
         size: file.size
     }
