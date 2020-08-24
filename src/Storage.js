@@ -1,6 +1,6 @@
 const ValidatorError = require('./ValidatorError');
 
-const saveFile = async (request, name, config = { required: false }, Helpers, upload = { path: "upload", options: { name: "", overwrite: false } }) => {
+const saveFile = async (request, name, config = { required: false, multifiles: false }, Helpers, upload = { path: "upload", options: { name: "", overwrite: false } }) => {
     let file = request.file(name, config);
     if (config.required && !file) throw new ValidatorError([ { field: name, message: `el archivo ${name} es requerido` } ]);
     if (!file) return {
@@ -8,8 +8,39 @@ const saveFile = async (request, name, config = { required: false }, Helpers, up
         code: "NOT_FOUND_FILE",
         message: "No se encontró el archivo"
     };
+    // validar multiples archivos
+    if (config.multifiles) {
+        let tmpFiles = [];
+        // save files
+        await file.moveAll(Helpers.tmpPath(upload.path), (f) => {
+            let newName = upload.options.name ? `${upload.options.name}_${new Date().getTime()}.${file.extname}` : f.clientName;
+            // add file 
+            tmpFiles.push({
+                realPath: Helpers.tmpPath(`${upload.path}/${newName}`),
+                path: `${upload.path}/${newName}`,
+                name: newName,
+                extname: file.extname,
+                size: file.size
+            });
+            // save name
+            return { name: newName };
+        });
+        // validar archivos
+        if (!file.movedAll()) {
+            let errors = file.errors();
+            throw new ValidatorError(errors);
+        }
+        // response multifiles
+        return {
+            success: true,
+            code: 'SAVE_SUCCESS_FILES',
+            message: "Los archivos se guardarón correctamente",
+            files: tmpFiles
+        }
+    }
+    // assign name file
+    upload.options.name = upload.options.name ? `${upload.options.name}.${file.extname}` : file.clientName;
     // next
-    upload.options.name = `${upload.options.name}.${file.extname}`;
     await file.move(Helpers.tmpPath(upload.path), upload.options);
     if (!file.moved()) {
         let error = file.error();
