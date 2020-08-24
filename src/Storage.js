@@ -13,7 +13,6 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
         let tmpFiles = [];
         // save files
         await file.moveAll(Helpers.tmpPath(upload.path), (f) => {
-            console.log(f);
             let newName = upload.options.name ? `${upload.options.name}_${new Date().getTime()}.${f.extname}` : f.clientName;
             // add file 
             tmpFiles.push({
