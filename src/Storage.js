@@ -9,7 +9,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
         message: "No se encontró el archivo"
     };
     // validar multiples archivos
-    if (config.multifiles) {
+    if (file.moveAll) {
         let tmpFiles = [];
         // save files
         await file.moveAll(Helpers.tmpPath(upload.path), (f) => {
