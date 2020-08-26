@@ -2,6 +2,9 @@ const ValidatorError = require('./ValidatorError');
 
 
 const saveOneFile = async (file, Helpers, upload) => {
+    // name 
+    upload.options.name = upload.options.name ? `${upload.options.name}.${file.extname}` : file.clientName;
+    // mover
     await file.move(Helpers.tmpPath(upload.path), upload.options);
     if (!file.moved()) {
         let error = file.error();
@@ -75,8 +78,6 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
             files: tmpFiles
         }
     }
-    // assign name file
-    upload.options.name = upload.options.name ? `${upload.options.name}.${file.extname}` : file.clientName;
     // next
     return await saveOneFile(file, Helpers, upload);
 }
