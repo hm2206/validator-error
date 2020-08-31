@@ -53,7 +53,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
                     size: f.size
                 });
                 // save name
-                return { name: newName };
+                return { name: newName, overwrite: upload.options.overwrite || false };
             });
             // validar archivos
             if (!file.movedAll()) {
