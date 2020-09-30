@@ -1,4 +1,5 @@
 const ValidatorError = require('./ValidatorError');
+const fs = require('fs');
 
 
 const saveOneFile = async (file, Helpers, upload) => {
@@ -24,7 +25,8 @@ const saveOneFile = async (file, Helpers, upload) => {
         path: `${upload.path}/${upload.options.name}`,
         name: upload.options.name,
         extname: file.extname,
-        size: file.size
+        size: file.size,
+        base64: fs.readFileSync(Helpers.tmpPath(`${upload.path}/${upload.options.name}`), 'base64')
     }
 }
 
@@ -50,7 +52,8 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
                     path: `${upload.path}/${newName}`,
                     name: newName,
                     extname: f.extname,
-                    size: f.size
+                    size: f.size,
+                    base64: fs.readFileSync(Helpers.tmpPath(`${upload.path}/${newName}`), 'base64')
                 });
                 // save name
                 return { name: newName, overwrite: upload.options.overwrite || false };
@@ -62,13 +65,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
             }
         } else {
             let oneFile = await saveOneFile(file, Helpers, upload);
-            tmpFiles.push({
-                realPath: oneFile.realPath,
-                path: oneFile.path,
-                name: oneFile.name,
-                extname: oneFile.extname,
-                size: oneFile.size
-            });
+            tmpFiles.push(oneFile);
         }
         // response multifiles
         return {
