@@ -2,7 +2,7 @@ const ValidatorError = require('./ValidatorError');
 const fs = require('fs');
 
 
-const saveOneFile = async (file, Helpers, upload) => {
+const saveOneFile = async (file, config = {}, Helpers, upload) => {
     // name 
     upload.options.name = upload.options.name ? `${upload.options.name}.${file.extname}` : file.clientName;
     // mover
@@ -26,11 +26,11 @@ const saveOneFile = async (file, Helpers, upload) => {
         name: upload.options.name,
         extname: file.extname,
         size: file.size,
-        base64: fs.readFileSync(Helpers.tmpPath(`${upload.path}/${upload.options.name}`), 'base64')
+        base64: config.base64 ? fs.readFileSync(Helpers.tmpPath(`${upload.path}/${upload.options.name}`), 'base64') : null
     }
 }
 
-const saveFile = async (request, name, config = { required: false, multifiles: false }, Helpers, upload = { path: "upload", options: { name: "", overwrite: false } }) => {
+const saveFile = async (request, name, config = { required: false, base64: false, multifiles: false }, Helpers, upload = { path: "upload", options: { name: "", overwrite: false } }) => {
     let file = request.file(name, config);
     if (config.required && !file) throw new ValidatorError([ { field: name, message: `el archivo ${name} es requerido` } ]);
     if (!file) return {
@@ -53,7 +53,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
                     name: newName,
                     extname: f.extname,
                     size: f.size,
-                    base64: fs.readFileSync(Helpers.tmpPath(`${upload.path}/${newName}`), 'base64')
+                    base64: config.base64 ? fs.readFileSync(Helpers.tmpPath(`${upload.path}/${newName}`), 'base64') : null
                 });
                 // save name
                 return { name: newName, overwrite: upload.options.overwrite || false };
@@ -64,7 +64,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
                 throw new ValidatorError(errors);
             }
         } else {
-            let oneFile = await saveOneFile(file, Helpers, upload);
+            let oneFile = await saveOneFile(file, config, Helpers, upload);
             tmpFiles.push(oneFile);
         }
         // response multifiles
@@ -76,7 +76,7 @@ const saveFile = async (request, name, config = { required: false, multifiles: f
         }
     }
     // next
-    return await saveOneFile(file, Helpers, upload);
+    return await saveOneFile(file, config, Helpers, upload);
 }
 
 
