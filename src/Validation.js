@@ -1,8 +1,21 @@
 const ValidatorError = require('./ValidatorError');
+const { validator } = require('indicative')
 
-module.exports = (validate, request = {}, rules = {}) => {
-    if (typeof validate != 'function') throw new Error("El parametro validate debe de ser una función");
-    return validate(request, rules).then(res => {
-        if (res.fails()) throw new ValidatorError(res.messages());
+const locationes = [
+    'es'
+];
+
+module.exports = (validate = null, data = {}, rules = {}, messages = {}, location = 'es') => {
+    if (typeof validate != 'function') validate = validator.validateAll;
+    // obtener idíoma
+    if (locationes.includes(location)) {
+        let location_messages = require(`./lang/${location}.js`);
+        messages = { ...location_messages, ...messages };
+    }
+    // response
+    return validate(data, rules, messages).then(res => {
+        return res;
+    }).catch(errors => {
+        throw new ValidatorError(errors);
     });
 }
