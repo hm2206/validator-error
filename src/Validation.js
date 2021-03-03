@@ -14,7 +14,7 @@ module.exports = (validate = null, data = {}, rules = {}, messages = {}, locatio
         messages = { ...location_messages, ...messages };
     }
     // validar si es adonis
-    if (is_adonis) return validate(data, rules, message)
+    if (is_adonis) return validate(data, rules, messages)
         .then(res => {
             if (!res.fails()) throw new ValidatorError(res.messages());
             return res.data;
