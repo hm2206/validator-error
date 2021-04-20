@@ -43,4 +43,5 @@ module.exports = {
 	"same": "El campo {{ field }} y :other debe coincidir.",
 	"string": "El campo {{ field }} debe ser una cadena.",
 	"under": "El campo {{ field }} debe estar por debajo de {{ argument.0 }}",
+	"unique": "El campo {{ field }} ya está en uso",
 };
